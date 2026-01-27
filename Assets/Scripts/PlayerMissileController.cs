@@ -4,8 +4,10 @@ public class PlayerMissileController : MonoBehaviour
 {
     private Vector2 target;
     [SerializeField] private float speed = 5f;
+    [SerializeField] private float stoppingDistance = 0.01f;
     private bool hasTarget;
-    private float stoppingDistance = 0.01f;
+
+    [SerializeField] private GameObject explosionPrefab;
 
     public void SetTarget(Vector2 targetPosition)
     {
@@ -22,10 +24,25 @@ public class PlayerMissileController : MonoBehaviour
         
         if (distance <= stoppingDistance)
         {
-            hasTarget = false;
+            OnTargetReached();
             return;
         }
 
         transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
+    }
+
+    private void OnTargetReached()
+    {
+        if (explosionPrefab != null)
+        {
+            Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        }
+        else
+        {
+            Debug.LogWarning("Explosion prefab is not assigned on " + gameObject.name);
+        }
+
+        hasTarget = false;
+        Destroy(gameObject);
     }
 }
