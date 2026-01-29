@@ -8,28 +8,33 @@ public class GameController : MonoBehaviour
     public int score = 0;
     public int level = 1;
     public int playerMissilesLeft = 30;
-    private int enemyMissilesLeftInRound;
+    public int enemyMissilesLeftInRound;
+    private int enemyMIssilesPerRound = 20;
 
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private TextMeshProUGUI missilesLeftText;
+    [SerializeField] private GameObject EndOfRoundPanel;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         myEnemyMissileSpawner = Object.FindFirstObjectByType<EnemyMissileSpawner>();
         UpdateMissilesLeftText();
-        RoundStart();
+        nextLevel();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        if (enemyMissilesLeftInRound <= 0)
+        {
+            Debug.Log("Level " + level + " complete!");
+            EndOfRoundPanel.SetActive(true);
+        }
     }
 
     public void UpdateMissilesLeftText()
     {
-               missilesLeftText.text = "Missiles Left: " + playerMissilesLeft;
+        missilesLeftText.text = "Missiles Left: " + playerMissilesLeft;
     }
 
     public void UpdateScore(int points)
@@ -38,10 +43,10 @@ public class GameController : MonoBehaviour
         scoreText.text = "Score: " + score;
     }
 
-    private void RoundStart()
+    private void nextLevel() 
     {
-        myEnemyMissileSpawner.missilesToSpawnThisRound = enemyMissilesLeftInRound;
-
+    myEnemyMissileSpawner.missilesToSpawnThisRound = enemyMIssilesPerRound + (level * 5);
+        enemyMissilesLeftInRound = myEnemyMissileSpawner.missilesToSpawnThisRound;
         myEnemyMissileSpawner.StartCoroutine(myEnemyMissileSpawner.SpawnMissiles());
     }
 }

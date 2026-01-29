@@ -4,7 +4,7 @@ using UnityEngine;
 public class EnemyMissileSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject enemyMissilePrefab;
-    [SerializeField] private float yPadding = 0.5f;
+    [SerializeField] private float yPadding = 1f;
     private float minX, maxX;
     public int missilesToSpawnThisRound = 10;
     public float timeBetweenSpawns = 0.5f;
@@ -14,7 +14,7 @@ public class EnemyMissileSpawner : MonoBehaviour
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         minX = Camera.main.ViewportToWorldPoint(new Vector3(0, 1, 0)).x;
         maxX = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, 0)).x;

@@ -32,7 +32,7 @@ public class EnemyMissile : MonoBehaviour
         else if (collision.gameObject.CompareTag("Explosion"))
         {
             //add point for every missile destroyed
-            Object.FindFirstObjectByType<GameController>().UpdateScore(1);
+            Object.FindFirstObjectByType<GameController>().UpdateScore(5);
             MissileExplode();
             Destroy(collision.gameObject);
         } 
@@ -41,6 +41,8 @@ public class EnemyMissile : MonoBehaviour
         private void MissileExplode()
         {
             Instantiate(ExplosionPrefab, transform.position, Quaternion.identity);
+            GameController gameController = Object.FindFirstObjectByType<GameController>();
+            gameController.enemyMissilesLeftInRound--;
             Destroy(gameObject);
         }
 
