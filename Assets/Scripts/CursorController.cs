@@ -7,10 +7,12 @@ public class CursorController : MonoBehaviour
     [SerializeField] GameObject missileLauncherPrefab;
     [SerializeField] private Texture2D cursorTexture;
     private Vector2 cursorHotspot;
+    private GameController myGameController;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        myGameController = Object.FindFirstObjectByType<GameController>();
         cursorHotspot = new Vector2(cursorTexture.width / 2f, cursorTexture.height / 2f);
         Cursor.SetCursor(cursorTexture, cursorHotspot, CursorMode.Auto);
 
@@ -29,7 +31,7 @@ public class CursorController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+        if (Mouse.current.leftButton.wasPressedThisFrame && myGameController.playerMissilesLeft > 0)
         {
             // Validate prerequisites
             if (missilePrefab == null || missileLauncherPrefab == null)
@@ -48,6 +50,8 @@ public class CursorController : MonoBehaviour
                 missileLauncherPrefab.transform.position,
                 Quaternion.identity
             );
+            myGameController.playerMissilesLeft--;
+            myGameController.UpdateMissilesLeftText();
 
             // Set target safely
             if (missile != null)

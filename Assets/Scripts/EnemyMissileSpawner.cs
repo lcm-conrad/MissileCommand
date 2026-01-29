@@ -12,6 +12,7 @@ public class EnemyMissileSpawner : MonoBehaviour
     float randomX;
     float yValue;
 
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -24,6 +25,7 @@ public class EnemyMissileSpawner : MonoBehaviour
         
 
         StartCoroutine(SpawnMissiles());
+        
     }
 
     // Update is called once per frame

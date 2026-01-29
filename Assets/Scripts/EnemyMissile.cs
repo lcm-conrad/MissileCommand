@@ -31,9 +31,10 @@ public class EnemyMissile : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Explosion"))
         {
+            //add point for every missile destroyed
+            Object.FindFirstObjectByType<GameController>().UpdateScore(1);
             MissileExplode();
             Destroy(collision.gameObject);
-
         } 
     }
 
