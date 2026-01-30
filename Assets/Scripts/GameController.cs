@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
 
 public class GameController : MonoBehaviour
 {
@@ -16,7 +17,14 @@ public class GameController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private TextMeshProUGUI missilesLeftText;
     [SerializeField] private GameObject EndOfRoundPanel;
-    
+    [SerializeField] private int missileEndOfRoundPoints = 5;
+    [SerializeField] private int cityEndOfRoundPoints = 100;
+
+    [SerializeField] private TextMeshProUGUI leftOverMissileBonusText;
+    [SerializeField] private TextMeshProUGUI leftOverCityBonusText;
+    [SerializeField] private TextMeshProUGUI totalBonusText;
+    [SerializeField] private TextMeshProUGUI countdownText;
+
     void Start()
     {
         myEnemyMissileSpawner = Object.FindFirstObjectByType<EnemyMissileSpawner>();
@@ -36,12 +44,10 @@ public class GameController : MonoBehaviour
 
     private void EndRound()
     {
-        Debug.Log("Level " + level + " complete!");
-        Debug.Log("EndOfRoundPanel is: " + (EndOfRoundPanel == null ? "NULL" : "assigned"));
-        if (EndOfRoundPanel != null)
+       
+        if (enemyMissilesLeftInRound <= 0)
         {
-            EndOfRoundPanel.SetActive(true);
-            Debug.Log("Panel set to active");
+            StartCoroutine(EndOfRound());
         }
     }
 
@@ -65,9 +71,42 @@ public class GameController : MonoBehaviour
 
     private void startRound() 
     {
-        roundEnded = false;
         myEnemyMissileSpawner.missilesToSpawnThisRound = enemyMIssilesPerRound;
         enemyMissilesLeftInRound = enemyMIssilesPerRound;
         myEnemyMissileSpawner.StartCoroutine(myEnemyMissileSpawner.SpawnMissiles());
+    }
+
+    public IEnumerator EndOfRound()
+    {
+        yield return new WaitForSeconds(.5f);
+        EndOfRoundPanel.SetActive(true);
+        int leftOverMissilesBonus = playerMissilesLeft * missileEndOfRoundPoints;
+
+        GameObject[] cities = GameObject.FindGameObjectsWithTag("Base");
+        Debug.Log("Number of cities left: " + cities.Length);
+        int leftOverCityBonus = cityEndOfRoundPoints * cities.Length;
+
+        int totalBonus = leftOverMissilesBonus + leftOverCityBonus;
+        leftOverMissileBonusText.text = "Missile Bonus: " + leftOverMissilesBonus;
+        leftOverCityBonusText.text = "City Bonus: " + leftOverCityBonus;
+        totalBonusText.text = "Total Bonus: " + totalBonus;
+        
+        score += totalBonus;
+
+    for (int i = 3; i > 0; i--)
+        {
+            countdownText.text = i.ToString();
+            yield return new WaitForSeconds(1f);
+        }
+        //prepare for next round
+        level++;
+        levelText.text = "Level: " + level;
+        enemyMIssilesPerRound += 5;
+        playerMissilesLeft = 30 + (level - 1) * 5;
+        UpdateMissilesLeftText();
+        roundEnded = false;
+        EndOfRoundPanel.SetActive(false);
+        startRound();
+
     }
 }

@@ -8,6 +8,8 @@ public class EnemyMissile : MonoBehaviour
 
     GameObject[] Base;
     Vector3 target;
+    private bool isDestroyed = false;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -21,21 +23,25 @@ public class EnemyMissile : MonoBehaviour
     {
         transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
     }
+    
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (isDestroyed) return;
+
         if (collision.gameObject.CompareTag("Base"))
         {
+            isDestroyed = true;
             MissileExplode();
             Destroy(collision.gameObject);
         }
         else if (collision.gameObject.CompareTag("Explosion"))
         {
-            //add point for every missile destroyed
+            isDestroyed = true;
             Object.FindFirstObjectByType<GameController>().UpdateScore(5);
             MissileExplode();
-            Destroy(collision.gameObject);
-        } 
+            // Don't destroy the explosion - let it run its course
+        }
     }
 
         private void MissileExplode()
