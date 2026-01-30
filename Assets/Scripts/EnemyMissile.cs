@@ -40,9 +40,9 @@ public class EnemyMissile : MonoBehaviour
 
         private void MissileExplode()
         {
-            Instantiate(ExplosionPrefab, transform.position, Quaternion.identity);
+        Object.FindFirstObjectByType<GameController>().EnemyMissileDestroyed();
+        Instantiate(ExplosionPrefab, transform.position, Quaternion.identity);
             GameController gameController = Object.FindFirstObjectByType<GameController>();
-            gameController.enemyMissilesLeftInRound--;
             Destroy(gameObject);
         }
 

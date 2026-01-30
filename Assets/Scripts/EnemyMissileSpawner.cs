@@ -6,7 +6,7 @@ public class EnemyMissileSpawner : MonoBehaviour
     [SerializeField] private GameObject enemyMissilePrefab;
     [SerializeField] private float yPadding = 1f;
     private float minX, maxX;
-    public int missilesToSpawnThisRound = 10;
+    public int missilesToSpawnThisRound;
     public float timeBetweenSpawns = 0.5f;
 
     float randomX;
@@ -16,15 +16,9 @@ public class EnemyMissileSpawner : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
+
         minX = Camera.main.ViewportToWorldPoint(new Vector3(0, 1, 0)).x;
         maxX = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, 0)).x;
-
-        randomX = Random.Range(minX, maxX);
-        yValue = Camera.main.ViewportToWorldPoint(new Vector3(0, 1, 0)).y;
-        Instantiate(enemyMissilePrefab, new Vector3(randomX, yValue + yPadding, 0), Quaternion.identity);
-        
-
-        StartCoroutine(SpawnMissiles());
         
     }
 
@@ -40,9 +34,10 @@ public class EnemyMissileSpawner : MonoBehaviour
         while (missilesToSpawnThisRound > 0)
         {
 
+            randomX = Random.Range(minX, maxX);
+            yValue = Camera.main.ViewportToWorldPoint(new Vector3(0, 1, 0)).y;
             Instantiate(enemyMissilePrefab, new Vector3(randomX, yValue + yPadding, 0), Quaternion.identity);
             missilesToSpawnThisRound--;
-
             yield return new WaitForSeconds(timeBetweenSpawns);
         }
     }

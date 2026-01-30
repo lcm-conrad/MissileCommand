@@ -10,25 +10,38 @@ public class GameController : MonoBehaviour
     public int playerMissilesLeft = 30;
     public int enemyMissilesLeftInRound;
     private int enemyMIssilesPerRound = 20;
+    private bool roundEnded = false;
 
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private TextMeshProUGUI missilesLeftText;
     [SerializeField] private GameObject EndOfRoundPanel;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    
     void Start()
     {
         myEnemyMissileSpawner = Object.FindFirstObjectByType<EnemyMissileSpawner>();
         UpdateMissilesLeftText();
-        nextLevel();
+        startRound();
+
     }
 
     void Update()
     {
-        if (enemyMissilesLeftInRound <= 0)
+        if (enemyMissilesLeftInRound <= 0 && !roundEnded)
         {
-            Debug.Log("Level " + level + " complete!");
+            roundEnded = true;
+            EndRound();
+        }
+    }
+
+    private void EndRound()
+    {
+        Debug.Log("Level " + level + " complete!");
+        Debug.Log("EndOfRoundPanel is: " + (EndOfRoundPanel == null ? "NULL" : "assigned"));
+        if (EndOfRoundPanel != null)
+        {
             EndOfRoundPanel.SetActive(true);
+            Debug.Log("Panel set to active");
         }
     }
 
@@ -43,10 +56,18 @@ public class GameController : MonoBehaviour
         scoreText.text = "Score: " + score;
     }
 
-    private void nextLevel() 
+    public void EnemyMissileDestroyed()
     {
-    myEnemyMissileSpawner.missilesToSpawnThisRound = enemyMIssilesPerRound + (level * 5);
-        enemyMissilesLeftInRound = myEnemyMissileSpawner.missilesToSpawnThisRound;
+        enemyMissilesLeftInRound--;
+        Debug.Log("Enemy missiles left in round (Update): " + enemyMissilesLeftInRound);
+
+    }
+
+    private void startRound() 
+    {
+        roundEnded = false;
+        myEnemyMissileSpawner.missilesToSpawnThisRound = enemyMIssilesPerRound;
+        enemyMissilesLeftInRound = enemyMIssilesPerRound;
         myEnemyMissileSpawner.StartCoroutine(myEnemyMissileSpawner.SpawnMissiles());
     }
 }
