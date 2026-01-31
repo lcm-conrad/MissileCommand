@@ -19,6 +19,8 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject EndOfRoundPanel;
     [SerializeField] private int missileEndOfRoundPoints = 5;
     [SerializeField] private int cityEndOfRoundPoints = 100;
+    [SerializeField] private float enemyMissileSpeedMultiplier = .5f;
+    public float enemyMissileSpeed = 1f;
 
     [SerializeField] private TextMeshProUGUI leftOverMissileBonusText;
     [SerializeField] private TextMeshProUGUI leftOverCityBonusText;
@@ -91,21 +93,33 @@ public class GameController : MonoBehaviour
         leftOverCityBonusText.text = "City Bonus: " + leftOverCityBonus;
         totalBonusText.text = "Total Bonus: " + totalBonus;
         
-        score += totalBonus;
 
     for (int i = 3; i > 0; i--)
         {
             countdownText.text = i.ToString();
             yield return new WaitForSeconds(1f);
         }
-        //prepare for next round
+
+        score += totalBonus;
+        UpdateScore(score);
+        
         level++;
         levelText.text = "Level: " + level;
+        
         enemyMIssilesPerRound += 5;
         playerMissilesLeft = 30 + (level - 1) * 5;
+        
+        enemyMissileSpeed += enemyMissileSpeedMultiplier;
+        if (enemyMissileSpeed > 3f)
+        {
+            enemyMissileSpeed = 3f;
+        }
+
         UpdateMissilesLeftText();
+        
         roundEnded = false;
         EndOfRoundPanel.SetActive(false);
+        
         startRound();
 
     }

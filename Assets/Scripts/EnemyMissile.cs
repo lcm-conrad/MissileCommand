@@ -3,10 +3,11 @@ using UnityEngine;
 
 public class EnemyMissile : MonoBehaviour
 {
-    [SerializeField] private float speed = 5f;
+    private float speed = 1f;
     [SerializeField] private GameObject ExplosionPrefab;
-
     GameObject[] Base;
+
+    private GameController myGameController;
     Vector3 target;
     private bool isDestroyed = false;
 
@@ -14,8 +15,12 @@ public class EnemyMissile : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        myGameController = Object.FindFirstObjectByType<GameController>();
         Base = GameObject.FindGameObjectsWithTag("Base");
         target = Base[Random.Range(0, Base.Length)].transform.position;
+        speed *= myGameController.enemyMissileSpeed; 
+        Debug.Log("Enemy missile speed for this round: " + speed);
+
     }
 
     // Update is called once per frame
@@ -38,7 +43,7 @@ public class EnemyMissile : MonoBehaviour
         else if (collision.gameObject.CompareTag("Explosion"))
         {
             isDestroyed = true;
-            Object.FindFirstObjectByType<GameController>().UpdateScore(5);
+            myGameController.UpdateScore(5);
             MissileExplode();
             // Don't destroy the explosion - let it run its course
         }
@@ -46,9 +51,8 @@ public class EnemyMissile : MonoBehaviour
 
         private void MissileExplode()
         {
-        Object.FindFirstObjectByType<GameController>().EnemyMissileDestroyed();
+        myGameController.EnemyMissileDestroyed();
         Instantiate(ExplosionPrefab, transform.position, Quaternion.identity);
-            GameController gameController = Object.FindFirstObjectByType<GameController>();
             Destroy(gameObject);
         }
 
