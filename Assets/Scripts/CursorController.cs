@@ -8,7 +8,8 @@ public class CursorController : MonoBehaviour
     [SerializeField] private Texture2D cursorTexture;
     private Vector2 cursorHotspot;
     private GameController myGameController;
-    
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -31,14 +32,10 @@ public class CursorController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Mouse.current.leftButton.wasPressedThisFrame && myGameController.playerMissilesLeft > 0)
+
+        if (Mouse.current.leftButton.wasPressedThisFrame && myGameController.currentMissilesLoadedInLauncher > 0)
         {
-            // Validate prerequisites
-            if (missilePrefab == null || missileLauncherPrefab == null)
-            {
-                Debug.LogError("Missile prefab or launcher prefab is not assigned!");
-                return;
-            }
+
 
             // Get mouse world position
             Vector2 mousePos = Mouse.current.position.ReadValue();
@@ -50,22 +47,8 @@ public class CursorController : MonoBehaviour
                 missileLauncherPrefab.transform.position,
                 Quaternion.identity
             );
-            myGameController.playerMissilesLeft--;
-            myGameController.UpdateMissilesLeftText();
-
-            // Set target safely
-            if (missile != null)
-            {
-                PlayerMissileController missileController = missile.GetComponent<PlayerMissileController>();
-                if (missileController != null)
-                {
-                    missileController.SetTarget(worldPos);
-                }
-                else
-                {
-                    Debug.LogError("PlayerMissileController component not found on missile prefab!");
-                }
-            }
+            myGameController.currentMissilesLoadedInLauncher--;
+            myGameController.UpdateMissilesInLauncherText();
         }
     }
 }

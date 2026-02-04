@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -21,43 +22,68 @@ public class GameController : MonoBehaviour
     [SerializeField] private int cityEndOfRoundPoints = 100;
     [SerializeField] private float enemyMissileSpeedMultiplier = .5f;
     public float enemyMissileSpeed = 1f;
+    public int currentMissilesLoadedInLauncher = 10;
+    private bool isReloading = false;
+    public int cityCounter;
 
     [SerializeField] private TextMeshProUGUI leftOverMissileBonusText;
     [SerializeField] private TextMeshProUGUI leftOverCityBonusText;
     [SerializeField] private TextMeshProUGUI totalBonusText;
     [SerializeField] private TextMeshProUGUI countdownText;
+    [SerializeField] private TextMeshProUGUI MissilesInLauncherText;
 
     void Start()
     {
+        playerMissilesLeft -= currentMissilesLoadedInLauncher;
         myEnemyMissileSpawner = Object.FindFirstObjectByType<EnemyMissileSpawner>();
+        cityCounter = GameObject.FindGameObjectsWithTag("Base").Length;
+        Debug.Log("Number of cities: " + cityCounter);
+
         UpdateMissilesLeftText();
+        UpdateMissilesInLauncherText();
+        
         startRound();
+
 
     }
 
     void Update()
     {
-        if (enemyMissilesLeftInRound <= 0 && !roundEnded)
+        if (playerMissilesLeft < 0)
+        {
+            playerMissilesLeft = 0;
+            UpdateMissilesLeftText();
+        }
+
+        if (enemyMissilesLeftInRound == 0 && !roundEnded)
         {
             roundEnded = true;
-            EndRound();
-        }
-    }
-
-    private void EndRound()
-    {
-       
-        if (enemyMissilesLeftInRound <= 0)
-        {
             StartCoroutine(EndOfRound());
         }
-    }
+
+        if (currentMissilesLoadedInLauncher == 0 && !isReloading)
+        {
+            isReloading = true;
+            StartCoroutine(ReloadMissileLauncher());
+        }
+
+        if (cityCounter <= 0)
+        {
+            SceneManager.LoadScene("TheEndScene");
+            Debug.Log("Game Over! Final Score: " + score);
+            // Here you can implement game over logic, such as showing a game over screen or restarting the game.
+        }
+        }
 
     public void UpdateMissilesLeftText()
     {
         missilesLeftText.text = "Missiles Left: " + playerMissilesLeft;
     }
-
+    
+    public void UpdateMissilesInLauncherText()
+    {
+        MissilesInLauncherText.text = "MIssiles in Launcher: " + currentMissilesLoadedInLauncher;
+    }
     public void UpdateScore(int points)
     {
         score += points;
@@ -71,11 +97,24 @@ public class GameController : MonoBehaviour
 
     }
 
+
     private void startRound() 
     {
         myEnemyMissileSpawner.missilesToSpawnThisRound = enemyMIssilesPerRound;
         enemyMissilesLeftInRound = enemyMIssilesPerRound;
         myEnemyMissileSpawner.StartCoroutine(myEnemyMissileSpawner.SpawnMissiles());
+    }
+
+    public IEnumerator ReloadMissileLauncher()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        
+        currentMissilesLoadedInLauncher += 10;  
+        playerMissilesLeft -= 10;                
+
+        UpdateMissilesLeftText();
+        UpdateMissilesInLauncherText();
     }
 
     public IEnumerator EndOfRound()
@@ -108,7 +147,8 @@ public class GameController : MonoBehaviour
         
         enemyMIssilesPerRound += 5;
         playerMissilesLeft = 30 + (level - 1) * 5;
-        
+        currentMissilesLoadedInLauncher = 10;
+
         enemyMissileSpeed += enemyMissileSpeedMultiplier;
         if (enemyMissileSpeed > 3f)
         {

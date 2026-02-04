@@ -19,7 +19,6 @@ public class EnemyMissile : MonoBehaviour
         Base = GameObject.FindGameObjectsWithTag("Base");
         target = Base[Random.Range(0, Base.Length)].transform.position;
         speed *= myGameController.enemyMissileSpeed; 
-        Debug.Log("Enemy missile speed for this round: " + speed);
 
     }
 
@@ -27,6 +26,11 @@ public class EnemyMissile : MonoBehaviour
     void Update()
     {
         transform.position = Vector2.MoveTowards(transform.position, target, speed * Time.deltaTime);
+        if (transform.position == target && !isDestroyed)
+        {
+            isDestroyed = true;
+            MissileExplode();
+        }
     }
     
 
@@ -38,6 +42,13 @@ public class EnemyMissile : MonoBehaviour
         {
             isDestroyed = true;
             MissileExplode();
+            if (collision.GetComponent<MissileLauncher>() != null)
+            {
+                    myGameController.playerMissilesLeft -= 10;
+                    myGameController.UpdateMissilesLeftText();
+                return;
+            }
+            myGameController.cityCounter--;
             Destroy(collision.gameObject);
         }
         else if (collision.gameObject.CompareTag("Explosion"))
@@ -45,7 +56,6 @@ public class EnemyMissile : MonoBehaviour
             isDestroyed = true;
             myGameController.UpdateScore(5);
             MissileExplode();
-            // Don't destroy the explosion - let it run its course
         }
     }
 
