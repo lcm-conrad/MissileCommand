@@ -49,6 +49,21 @@ public class CursorController : MonoBehaviour
             );
             myGameController.currentMissilesLoadedInLauncher--;
             myGameController.UpdateMissilesInLauncherText();
+
+
+            // Set target safely
+            if (missile != null)
+            {
+                PlayerMissileController missileController = missile.GetComponent<PlayerMissileController>();
+                if (missileController != null)
+                {
+                    missileController.SetTarget(worldPos);
+                }
+                else
+                {
+                    Debug.LogError("PlayerMissileController component not found on missile prefab!");
+                }
+            }
         }
     }
 }

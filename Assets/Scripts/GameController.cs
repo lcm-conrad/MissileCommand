@@ -115,6 +115,8 @@ public class GameController : MonoBehaviour
 
         UpdateMissilesLeftText();
         UpdateMissilesInLauncherText();
+        
+        isReloading = false;
     }
 
     public IEnumerator EndOfRound()
@@ -131,13 +133,36 @@ public class GameController : MonoBehaviour
         leftOverMissileBonusText.text = "Missile Bonus: " + leftOverMissilesBonus;
         leftOverCityBonusText.text = "City Bonus: " + leftOverCityBonus;
         totalBonusText.text = "Total Bonus: " + totalBonus;
-        
 
-    for (int i = 3; i > 0; i--)
+        int bonusMultiplier = 1;
+        int[][] levelRanges = new int[][]
         {
-            countdownText.text = i.ToString();
-            yield return new WaitForSeconds(1f);
+            new int[] { 3, 5, 2 },
+            new int[] { 5, 7, 3 },
+            new int[] { 7, 9, 4 },
+            new int[] { 9, 11, 5 },
+            new int[] { 11, int.MaxValue, 6 }
+        };
+
+        foreach (int[] range in levelRanges)
+        {
+            if (level >= range[0] && level < range[1])
+            {
+                bonusMultiplier = range[2];
+                break;
+            }
         }
+
+        totalBonus *= bonusMultiplier;
+        totalBonusText.text = bonusMultiplier > 1 
+            ? $"Total Bonus (x{bonusMultiplier}): {totalBonus}" 
+            : $"Total Bonus: {totalBonus}";
+
+            for (int i = 3; i > 0; i--)
+            {
+                countdownText.text = i.ToString();
+                yield return new WaitForSeconds(1f);
+            }
 
         score += totalBonus;
         UpdateScore(score);
