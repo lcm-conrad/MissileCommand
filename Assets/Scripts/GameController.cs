@@ -123,7 +123,7 @@ public class GameController : MonoBehaviour
     {
         yield return new WaitForSeconds(.5f);
         EndOfRoundPanel.SetActive(true);
-        int leftOverMissilesBonus = playerMissilesLeft * missileEndOfRoundPoints;
+        int leftOverMissilesBonus = (playerMissilesLeft + currentMissilesLoadedInLauncher) * missileEndOfRoundPoints;
 
         GameObject[] cities = GameObject.FindGameObjectsWithTag("Base");
         Debug.Log("Number of cities left: " + cities.Length);
@@ -181,7 +181,8 @@ public class GameController : MonoBehaviour
         }
 
         UpdateMissilesLeftText();
-        
+        UpdateMissilesInLauncherText();
+
         roundEnded = false;
         EndOfRoundPanel.SetActive(false);
         

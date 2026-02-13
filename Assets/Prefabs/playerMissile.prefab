@@ -103,6 +103,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99f5595bafb57cc4fa44cf55aaa06f73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMissileController
-  speed: 5
+  speed: 10
   stoppingDistance: 0.01
   explosionPrefab: {fileID: 5126613627728044855, guid: 7a4e38b4f47bfec4793b1f14040e3826, type: 3}

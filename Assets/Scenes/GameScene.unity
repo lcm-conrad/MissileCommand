@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 22402286}
   m_Layer: 0
   m_Name: missileLauncher
-  m_TagString: Base
+  m_TagString: MissileLauncher
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -457,6 +457,7 @@ MonoBehaviour:
   enemyMissileSpeedMultiplier: 0.5
   enemyMissileSpeed: 1
   currentMissilesLoadedInLauncher: 10
+  cityCounter: 0
   leftOverMissileBonusText: {fileID: 787263964}
   leftOverCityBonusText: {fileID: 1133244397}
   totalBonusText: {fileID: 1305910138}
