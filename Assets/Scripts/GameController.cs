@@ -24,10 +24,11 @@ public class GameController : MonoBehaviour
     public float enemyMissileSpeed = 1f;
     public int currentMissilesLoadedInLauncher = 10;
     private bool isReloading = false;
+    
     public int cityCounter;
     private int howManyCitiesRecovered;
     [SerializeField] private GameObject[] cityPositions;
-
+    [SerializeField] private GameObject cityPrefab;
 
     [SerializeField] private TextMeshProUGUI leftOverMissileBonusText;
     [SerializeField] private TextMeshProUGUI leftOverCityBonusText;
@@ -172,7 +173,18 @@ public class GameController : MonoBehaviour
         
         if (score > 10000 && howManyCitiesRecovered == 0)
         {
-     
+            howManyCitiesRecovered++;
+
+            foreach (GameObject go in cityPositions)
+            {
+                if(go.GetComponentInChildren<CityController>() == null)
+                {
+                    Instantiate(cityPrefab, go.transform.position, Quaternion.identity, go.transform);
+                    Debug.Log("City Recovered!");
+                    cityCounter++;
+                    break;
+                }
+            }
         }
 
         level++;

@@ -28,6 +28,7 @@ public class EnemyMissile : MonoBehaviour
         speed *= myGameController.enemyMissileSpeed; 
 
         randomTimer = Random.Range(0.1f, 10f);
+        randomTimer /= myGameController.enemyMissileSpeed; // Adjust the timer based on the missile speed
         Invoke(nameof(SplitMissile), randomTimer);
 
     }
