@@ -106,3 +106,4 @@ MonoBehaviour:
   speed: 10
   stoppingDistance: 0.01
   explosionPrefab: {fileID: 5126613627728044855, guid: 7a4e38b4f47bfec4793b1f14040e3826, type: 3}
+  explosionSound: {fileID: 8300000, guid: b9be66738b2a2104f91d6bbe6d77451c, type: 3}

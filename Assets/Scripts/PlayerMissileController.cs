@@ -9,6 +9,7 @@ public class PlayerMissileController : MonoBehaviour
 
     [SerializeField] private GameObject explosionPrefab;
 
+    [SerializeField] private AudioClip explosionSound;
     public void SetTarget(Vector2 targetPosition)
     {
         target = targetPosition;
@@ -36,6 +37,8 @@ public class PlayerMissileController : MonoBehaviour
         if (explosionPrefab != null)
         {
             Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+            AudioSource.PlayClipAtPoint(explosionSound, transform.position);
+
         }
         else
         {

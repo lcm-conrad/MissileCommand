@@ -108,6 +108,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   ExplosionPrefab: {fileID: 5126613627728044855, guid: 27d8115f02dc344409ad549f847feb90, type: 3}
+  enemyMissilePrefab: {fileID: 3795162571178301950}
+  explosionSound: {fileID: 8300000, guid: b9be66738b2a2104f91d6bbe6d77451c, type: 3}
 --- !u!58 &6676565877166889548
 CircleCollider2D:
   m_ObjectHideFlags: 0

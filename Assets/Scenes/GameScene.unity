@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 22402286}
   m_Layer: 0
   m_Name: missileLauncher
-  m_TagString: MissileLauncher
+  m_TagString: Base
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -864,6 +864,7 @@ MonoBehaviour:
   missilePrefab: {fileID: 6575754233127395467, guid: 52c08fc851b336549b9a72c8b21ca808, type: 3}
   missileLauncherPrefab: {fileID: 22402281}
   cursorTexture: {fileID: 2800000, guid: ef19a195f23907f47b0f308b12e83120, type: 3}
+  missileShootSound: {fileID: 8300000, guid: dcbaeb311b510744783c67bd9a1a8034, type: 3}
 --- !u!1 &541765963
 GameObject:
   m_ObjectHideFlags: 0

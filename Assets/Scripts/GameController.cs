@@ -25,6 +25,9 @@ public class GameController : MonoBehaviour
     public int currentMissilesLoadedInLauncher = 10;
     private bool isReloading = false;
     public int cityCounter;
+    private int howManyCitiesRecovered;
+    [SerializeField] private GameObject[] cityPositions;
+
 
     [SerializeField] private TextMeshProUGUI leftOverMissileBonusText;
     [SerializeField] private TextMeshProUGUI leftOverCityBonusText;
@@ -36,7 +39,7 @@ public class GameController : MonoBehaviour
     {
         playerMissilesLeft -= currentMissilesLoadedInLauncher;
         myEnemyMissileSpawner = Object.FindFirstObjectByType<EnemyMissileSpawner>();
-        cityCounter = GameObject.FindGameObjectsWithTag("Base").Length;
+        cityCounter = GameObject.FindGameObjectsWithTag("Base").Length - 1;
         Debug.Log("Number of cities: " + cityCounter);
 
         UpdateMissilesLeftText();
@@ -167,6 +170,11 @@ public class GameController : MonoBehaviour
         score += totalBonus;
         UpdateScore(score);
         
+        if (score > 10000 && howManyCitiesRecovered == 0)
+        {
+     
+        }
+
         level++;
         levelText.text = "Level: " + level;
         

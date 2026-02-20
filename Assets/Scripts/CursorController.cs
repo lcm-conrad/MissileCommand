@@ -6,6 +6,7 @@ public class CursorController : MonoBehaviour
     [SerializeField] GameObject missilePrefab;
     [SerializeField] GameObject missileLauncherPrefab;
     [SerializeField] private Texture2D cursorTexture;
+    [SerializeField] private AudioClip missileShootSound;
     private Vector2 cursorHotspot;
     private GameController myGameController;
 
@@ -50,6 +51,7 @@ public class CursorController : MonoBehaviour
             myGameController.currentMissilesLoadedInLauncher--;
             myGameController.UpdateMissilesInLauncherText();
 
+            AudioSource.PlayClipAtPoint(missileShootSound, missile.transform.position);
 
             // Set target safely
             if (missile != null)

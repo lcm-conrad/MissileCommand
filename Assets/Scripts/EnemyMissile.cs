@@ -7,10 +7,16 @@ public class EnemyMissile : MonoBehaviour
     [SerializeField] private GameObject ExplosionPrefab;
     GameObject[] Base;
 
+    [SerializeField] private GameObject enemyMissilePrefab;
+
+
     private GameController myGameController;
     Vector3 target;
     private bool isDestroyed = false;
 
+    [SerializeField] private AudioClip explosionSound;
+
+    private float randomTimer;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -18,7 +24,11 @@ public class EnemyMissile : MonoBehaviour
         myGameController = Object.FindFirstObjectByType<GameController>();
         Base = GameObject.FindGameObjectsWithTag("Base");
         target = Base[Random.Range(0, Base.Length)].transform.position;
+        
         speed *= myGameController.enemyMissileSpeed; 
+
+        randomTimer = Random.Range(0.1f, 10f);
+        Invoke(nameof(SplitMissile), randomTimer);
 
     }
 
@@ -64,7 +74,17 @@ public class EnemyMissile : MonoBehaviour
         myGameController.EnemyMissileDestroyed();
         Instantiate(ExplosionPrefab, transform.position, Quaternion.identity);
             Destroy(gameObject);
-        }
+        AudioSource.PlayClipAtPoint(explosionSound, transform.position);
+    }
 
+    private void SplitMissile()
+    {
+        float yValue = Camera.main.ViewportToWorldPoint(new Vector3(0, 1f, 0)).y;
+        if (transform.position.y > yValue - 1) // Only split if the missile is still high enough
+        {
+            myGameController.enemyMissilesLeftInRound++;
+            Instantiate(enemyMissilePrefab, transform.position, Quaternion.identity);
+        }
+    }
 }
 
